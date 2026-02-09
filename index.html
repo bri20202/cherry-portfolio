@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Morel — Backend Developer</title>
+  <style>
+    /* ── Reset & Base ──────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pink-light: #fce4ec;
+      --pink:       #f8bbd0;
+      --pink-mid:   #f48fb1;
+      --pink-dark:  #c2185b;
+      --brown:      #5d4037;
+      --brown-light:#8d6e63;
+      --bg:         #fff5f7;
+      --text:       #3e2723;
+      --card-bg:    rgba(255,255,255,0.88);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: url('https://cdn.theanimegallery.com/theanimegallery/4acfb967-85f9-4dd8-8de6-f5532aefc6f2-anime-cherry-blossom-wallpaper.webp')
+                  no-repeat center center fixed;
+      background-size: cover;
+      background-color: #1a0a10;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── YouTube Video Background ─────────────────────── */
+    .video-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .video-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,240,243,0.15);
+      z-index: 1;
+    }
+    .video-bg iframe,
+    .video-bg #yt-player {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180vw;
+      height: 180vh;
+      min-width: 180vw;
+      min-height: 180vh;
+      transform: translate(-50%, -50%);
+      border: 0;
+    }
+
+    /* ── Petal Canvas (behind everything) ──────────────── */
+    #petal-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* (tree removed — video background instead) */
+
+    /* ── Navigation ────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(255,240,243,0.85);
+      border-bottom: 1px solid var(--pink);
+      padding: 0.6rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+    nav a {
+      color: var(--pink-dark);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      position: relative;
+      padding: 0.3rem 0;
+      transition: color .25s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--pink-dark);
+      transition: width .3s ease;
+    }
+    nav a:hover::after { width: 100%; }
+    nav a:hover { color: var(--brown); }
+
+    /* ── Sections ──────────────────────────────────────── */
+    section {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+      padding-top: 4rem;
+    }
+    .hero .blossom-icon {
+      font-size: 3.5rem;
+      animation: float 4s ease-in-out infinite;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--pink-dark);
+      letter-spacing: -1px;
+    }
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: var(--brown-light);
+      max-width: 520px;
+    }
+    .hero .cta {
+      margin-top: 1rem;
+      display: inline-block;
+      padding: 0.7rem 2rem;
+      border-radius: 999px;
+      background: var(--pink-dark);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(194,24,91,0.3);
+    }
+    .hero .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(194,24,91,0.45);
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%     { transform: translateY(-14px) rotate(8deg); }
+    }
+
+    /* ── Section Headings ──────────────────────────────── */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--pink-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .section-title .icon { font-size: 1.4rem; }
+
+    /* ── Cards ─────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--pink);
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 1.2rem;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(194,24,91,0.12);
+    }
+    .card h3 {
+      color: var(--brown);
+      margin-bottom: .2rem;
+      font-size: 1.15rem;
+    }
+    .card .meta {
+      font-size: 0.85rem;
+      color: var(--brown-light);
+      margin-bottom: .5rem;
+    }
+    .card p, .card ul {
+      font-size: 0.95rem;
+      color: #4e342e;
+    }
+    .card ul {
+      padding-left: 1.2rem;
+    }
+    .card ul li { margin-bottom: .25rem; }
+
+    /* ── Skills Grid ───────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .skill-category h4 {
+      color: var(--pink-dark);
+      margin-bottom: .4rem;
+      font-size: 1rem;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .tag {
+      background: var(--pink-light);
+      color: var(--brown);
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid var(--pink);
+      transition: background .2s;
+    }
+    .tag:hover {
+      background: var(--pink);
+    }
+
+    /* ── Contact ───────────────────────────────────────── */
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .contact-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .55rem 1.2rem;
+      border-radius: 999px;
+      background: var(--card-bg);
+      border: 1px solid var(--pink);
+      color: var(--brown);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background .2s, transform .2s;
+    }
+    .contact-links a:hover {
+      background: var(--pink-light);
+      transform: translateY(-2px);
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      font-size: 0.82rem;
+      color: var(--brown-light);
+    }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2rem; }
+      nav { gap: 1rem; padding: 0.5rem 1rem; }
+      nav a { font-size: 0.82rem; }
+      .video-bg iframe, .video-bg #yt-player { width: 300vw; height: 300vh; min-width: 300vw; min-height: 300vh; }
+    }
+
+    /* ── Scroll fade-in ────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Falling petals canvas -->
+<canvas id="petal-canvas"></canvas>
+
+<!-- YouTube video background -->
+<div class="video-bg">
+  <div id="yt-player"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#experience">Experience</a>
+  <a href="#projects">Projects</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="blossom-icon">&#127800;</div>
+  <h1>Morel</h1>
+  <p class="tagline">Backend Developer crafting reliable, scalable systems — one clean endpoint at a time.</p>
+  <a href="#about" class="cta">View My Work</a>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- ABOUT -->
+<section id="about">
+  <div class="fade-in">
+    <h2 class="section-title"><span class="icon">&#127800;</span> About Me</h2>
+    <div class="card">
+      <p>
+        I'm a backend developer who loves building the invisible engines that power great products.
+        From designing RESTful APIs and microservices to optimizing databases and building CI/CD pipelines,
+        I focus on writing clean, testable, and maintainable code that scales.
+      </p>
+      <br/>
+      <p>
+        When I'm not wrangling servers, you'll find me exploring new technologies, contributing to
+        open-source projects, and continuously leveling up my craft.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SKILLS -->
+<section id="skills">
+  <div class="fade-in">
+    <h2 class="section-title"><span class="icon">&#9881;&#65039;</span> Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="card skill-category">
+        <h4>Languages</h4>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">Go</span>
+          <span class="tag">SQL</span>
+          <span class="tag">Bash</span>
+        </div>
+      </div>
+      <div class="card skill-category">
+        <h4>Frameworks</h4>
+        <div class="tags">
+          <span class="tag">Django</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">Express.js</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">Flask</span>
+        </div>
+      </div>
+      <div class="card skill-category">
+        <h4>Databases</h4>
+        <div class="tags">
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">MongoDB</span>
+          <span class="tag">Redis</span>
+          <span class="tag">MySQL</span>
+          <span class="tag">SQLite</span>
+        </div>
+      </div>
+      <div class="card skill-category">
+        <h4>DevOps & Tools</h4>
+        <div class="tags">
+          <span class="tag">Docker</span>
+          <span class="tag">Git</span>
+          <span class="tag">Linux</span>
+          <span class="tag">CI/CD</span>
+          <span class="tag">AWS</span>
+          <span class="tag">Nginx</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="fade-in">
+    <h2 class="section-title"><span class="icon">&#128188;</span> Experience</h2>
+
+    <div class="card">
+      <h3>Backend Developer — Your Company</h3>
+      <p class="meta">2023 — Present</p>
+      <ul>
+        <li>Designed and maintained RESTful APIs serving 10k+ daily requests</li>
+        <li>Optimized database queries reducing response times by 40%</li>
+        <li>Implemented authentication & authorization with JWT and OAuth2</li>
+        <li>Built automated CI/CD pipelines with GitHub Actions and Docker</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Junior Developer — Previous Company</h3>
+      <p class="meta">2021 — 2023</p>
+      <ul>
+        <li>Developed microservices for internal tooling and data processing</li>
+        <li>Wrote unit and integration tests achieving 85%+ code coverage</li>
+        <li>Collaborated with frontend team to define API contracts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="fade-in">
+    <h2 class="section-title"><span class="icon">&#128187;</span> Projects</h2>
+
+    <div class="card">
+      <h3>API Gateway Service</h3>
+      <p class="meta">Python &middot; FastAPI &middot; Redis &middot; Docker</p>
+      <p>A high-performance API gateway with rate limiting, request caching, and JWT validation. Handles routing across multiple downstream microservices.</p>
+    </div>
+
+    <div class="card">
+      <h3>Real-Time Chat Backend</h3>
+      <p class="meta">Node.js &middot; WebSockets &middot; MongoDB &middot; Redis</p>
+      <p>Scalable WebSocket server supporting persistent chat rooms, message history, and presence tracking with pub/sub architecture.</p>
+    </div>
+
+    <div class="card">
+      <h3>Task Scheduler Engine</h3>
+      <p class="meta">Go &middot; PostgreSQL &middot; gRPC</p>
+      <p>Distributed task scheduling system with retry logic, dead-letter queues, and a dashboard API for monitoring job health.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- CONTACT -->
+<section id="contact">
+  <div class="fade-in">
+    <h2 class="section-title"><span class="icon">&#9993;&#65039;</span> Get in Touch</h2>
+    <div class="card">
+      <p style="margin-bottom:1rem;">Interested in working together? Feel free to reach out!</p>
+      <div class="contact-links">
+        <a href="mailto:your@email.com">&#9993;&#65039; Email</a>
+        <a href="https://github.com/yourusername" target="_blank">&#128025; GitHub</a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank">&#128101; LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&#127800; Built with care &amp; cherry blossoms &#127800;</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SCRIPTS -->
+<script>
+// ── YouTube IFrame API ──────────────────────────────────
+var tag = document.createElement('script');
+tag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+
+function onYouTubeIframeAPIReady() {
+  new YT.Player('yt-player', {
+    videoId: '5wRWniH7rt8',
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      loop: 1,
+      playlist: '5wRWniH7rt8',
+      controls: 0,
+      showinfo: 0,
+      rel: 0,
+      modestbranding: 1,
+      playsinline: 1,
+      disablekb: 1,
+      iv_load_policy: 3,
+      origin: window.location.origin
+    },
+    events: {
+      onReady: function(e) { e.target.playVideo(); },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
+      },
+      onError: function() {
+        // Video failed — static image fallback is already on body
+        document.querySelector('.video-bg').style.display = 'none';
+      }
+    }
+  });
+}
+
+// ── Falling Petals ──────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('petal-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const PETAL_COUNT = 45;
+  const colors = ['#f8bbd0','#f48fb1','#fce4ec','#f06292','#e91e63'];
+
+  class Petal {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x  = Math.random() * W;
+      this.y  = init ? Math.random() * H : -20;
+      this.w  = 8 + Math.random() * 10;
+      this.h  = this.w * (0.6 + Math.random() * 0.4);
+      this.r  = Math.random() * Math.PI * 2;
+      this.dr = (Math.random() - 0.5) * 0.02;
+      this.vx = (Math.random() - 0.5) * 0.6;
+      this.vy = 0.5 + Math.random() * 1.2;
+      this.sx = Math.random() * 0.8 + 0.3;          // horizontal sway speed
+      this.sa = Math.random() * Math.PI * 2;         // sway phase
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.opacity = 0.5 + Math.random() * 0.5;
+    }
+    update() {
+      this.sa += 0.015;
+      this.x += this.vx + Math.sin(this.sa) * this.sx;
+      this.y += this.vy;
+      this.r += this.dr;
+      if (this.y > H + 30 || this.x < -30 || this.x > W + 30) this.reset(false);
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.r);
+      ctx.globalAlpha = this.opacity;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      // petal shape: two quadratic curves
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(this.w / 2,  -this.h / 2, 0, -this.h);
+      ctx.quadraticCurveTo(-this.w / 2, -this.h / 2, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  const petals = Array.from({ length: PETAL_COUNT }, () => new Petal());
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of petals) { p.update(); p.draw(); }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ── Scroll fade-in ──────────────────────────────────────
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.15 }
+);
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
