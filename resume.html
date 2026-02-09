@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Briahna Chatman - Resume</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.5in;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+      font-size: 10.5pt;
+      color: #2c2c2c;
+      line-height: 1.45;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+      background: #fff;
+    }
+
+    a { color: #c2185b; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #c2185b;
+    }
+    header h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: 0.5px;
+    }
+    header p {
+      font-size: 10pt;
+      color: #555;
+      margin-top: 4px;
+    }
+    header .contact-row {
+      margin-top: 6px;
+      font-size: 9.5pt;
+      color: #444;
+    }
+    header .contact-row span { margin: 0 6px; }
+
+    h2 {
+      font-size: 11.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #c2185b;
+      border-bottom: 1px solid #e0b0be;
+      padding-bottom: 3px;
+      margin-top: 14px;
+      margin-bottom: 8px;
+    }
+
+    .entry { margin-bottom: 10px; }
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .entry-header h3 {
+      font-size: 10.5pt;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .entry-header .date {
+      font-size: 9.5pt;
+      color: #777;
+      white-space: nowrap;
+    }
+    .entry-sub {
+      font-size: 9.5pt;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 3px;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin-top: 2px;
+    }
+    ul li {
+      margin-bottom: 2px;
+      font-size: 10pt;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 24px;
+      font-size: 10pt;
+    }
+    .skills-grid .label {
+      font-weight: 600;
+      color: #333;
+    }
+    .skills-grid .value {
+      color: #555;
+    }
+
+    .project-link {
+      font-size: 9pt;
+      color: #c2185b;
+    }
+
+    @media print {
+      body { padding: 0; }
+      a { color: #c2185b !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Briahna Chatman</h1>
+  <p>IT Graduate &amp; Aspiring Backend Developer</p>
+  <div class="contact-row">
+    <a href="mailto:briahnachatman@gmail.com">briahnachatman@gmail.com</a>
+    <span>|</span>
+    678-793-0175
+    <span>|</span>
+    <a href="https://github.com/bri20202">github.com/bri20202</a>
+    <span>|</span>
+    <a href="https://bri20202.github.io/cherry-portfolio">bri20202.github.io/cherry-portfolio</a>
+  </div>
+</header>
+
+<h2>Summary</h2>
+<p>
+  IT graduate with a Bachelor's in Information Technology and 4+ years of technical support experience.
+  Building backend development skills through personal projects using Python, FastAPI, and SQL.
+  Seeking entry-level or internship opportunities in backend development where I can grow and contribute.
+</p>
+
+<h2>Technical Skills</h2>
+<div class="skills-grid">
+  <div><span class="label">Languages:</span> <span class="value">Python, JavaScript, TypeScript, Go, SQL, Bash</span></div>
+  <div><span class="label">Frameworks:</span> <span class="value">FastAPI, Django, Flask, Express.js, Node.js</span></div>
+  <div><span class="label">Databases:</span> <span class="value">PostgreSQL, MongoDB, Redis, MySQL, SQLite</span></div>
+  <div><span class="label">Tools:</span> <span class="value">Docker, Git, Linux, CI/CD, AWS, Nginx</span></div>
+</div>
+
+<h2>Projects</h2>
+<div class="entry">
+  <div class="entry-header">
+    <h3>Sakura Market</h3>
+    <span class="date">2025</span>
+  </div>
+  <div class="entry-sub">Python, FastAPI, SQLAlchemy, JWT, AWS S3, boto3
+    &nbsp;&mdash;&nbsp;<a class="project-link" href="https://github.com/bri20202/sakura-market">github.com/bri20202/sakura-market</a>
+  </div>
+  <ul>
+    <li>Built a full e-commerce REST API with product catalog, shopping cart, and order processing with atomic inventory management</li>
+    <li>Integrated AWS S3 via boto3 for product image uploads with graceful fallback when credentials are unavailable</li>
+    <li>Implemented checkout flow with stock validation, price locking at purchase time, and automatic cart clearing</li>
+    <li>Created an interactive storefront frontend with category filtering, animated cart sidebar, and order history</li>
+    <li>Designed 5-table relational schema handling users, products, cart items, orders, and order line items</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="entry-header">
+    <h3>Sakura Gacha API</h3>
+    <span class="date">2025</span>
+  </div>
+  <div class="entry-sub">Python, FastAPI, SQLAlchemy, JWT, SQLite
+    &nbsp;&mdash;&nbsp;<a class="project-link" href="https://github.com/bri20202/sakura-gacha">github.com/bri20202/sakura-gacha</a>
+    &nbsp;&mdash;&nbsp;<a class="project-link" href="https://sakura-gacha.onrender.com/docs">Live Demo</a>
+  </div>
+  <ul>
+    <li>Built a REST API simulating gacha (loot box) pull mechanics with weighted random item selection across four rarity tiers</li>
+    <li>Implemented a pity system with soft pity (50 pulls) and hard pity (90 pulls) guarantees using pull history tracking</li>
+    <li>Designed a relational database schema with 5 tables handling users, banners, items, pulls, and inventory</li>
+    <li>Added JWT authentication with bcrypt password hashing for multi-user support</li>
+    <li>Deployed to Render with auto-generated Swagger documentation for live API testing</li>
+  </ul>
+</div>
+
+<h2>Experience</h2>
+<div class="entry">
+  <div class="entry-header">
+    <h3>Technical Support</h3>
+    <span class="date">Aug 2020 &mdash; Oct 2024</span>
+  </div>
+  <div class="entry-sub">Transcom</div>
+  <ul>
+    <li>Diagnosed and troubleshot technical issues to ensure swift resolution and customer satisfaction</li>
+    <li>Enhanced customer communication by providing clear, concise information and actively listening to feedback</li>
+    <li>Delivered remote assistance to users, facilitating effective problem resolution in a timely manner</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="entry-header">
+    <h3>Call Center Agent</h3>
+    <span class="date">May 2019 &mdash; Aug 2020</span>
+  </div>
+  <div class="entry-sub">SS Media Solutions</div>
+  <ul>
+    <li>Implemented effective upselling techniques that enhanced customer purchasing decisions</li>
+    <li>Delivered exceptional customer service by addressing inquiries and resolving issues promptly</li>
+    <li>Acquired in-depth product knowledge to assist customers in making informed buying choices</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="entry-header">
+    <h3>Stable Worker</h3>
+    <span class="date">Jan 2019 &mdash; Apr 2019</span>
+  </div>
+  <div class="entry-sub">High Flight Farm</div>
+  <ul>
+    <li>Handled and cared for horses at least 3 days a week or more depending on amount of staff</li>
+  </ul>
+</div>
+
+<div class="entry">
+  <div class="entry-header">
+    <h3>Sales Associate</h3>
+    <span class="date">May 2017 &mdash; May 2018</span>
+  </div>
+  <div class="entry-sub">Cracker Barrel</div>
+  <ul>
+    <li>Sold various items and maintained customer needs</li>
+  </ul>
+</div>
+
+<h2>Education</h2>
+<div class="entry">
+  <div class="entry-header">
+    <h3>Strayer University &mdash; Georgia</h3>
+    <span class="date">2020 &mdash; 2024</span>
+  </div>
+  <div class="entry-sub">Bachelor of Arts (BA), Information Technology</div>
+</div>
+
+<div class="entry">
+  <div class="entry-header">
+    <h3>Luella High School</h3>
+    <span class="date">2014 &mdash; 2018</span>
+  </div>
+  <div class="entry-sub">High School Diploma</div>
+</div>
+
+</body>
+</html>
