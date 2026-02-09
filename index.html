@@ -484,6 +484,7 @@ function onYouTubeIframeAPIReady() {
       autoplay: 1,
       mute: 1,
       loop: 1,
+      start: 30,
       playlist: '5wRWniH7rt8',
       controls: 0,
       showinfo: 0,
@@ -497,7 +498,7 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: function(e) { e.target.playVideo(); },
       onStateChange: function(e) {
-        if (e.data === YT.PlayerState.ENDED) e.target.playVideo();
+        if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(30); e.target.playVideo(); }
       },
       onError: function() {
         // Video failed — static image fallback is already on body
